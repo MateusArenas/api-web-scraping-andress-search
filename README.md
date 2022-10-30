@@ -2,9 +2,6 @@
 
 this api usage basic for authenticate, jtw, refresh token and email verification.
 
-## get libs
-pip freeze > requirements.txt
-
 ## Initialize
 pip install virtualenv
 
