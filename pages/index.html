@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <style>
+  body {
+    font: 16px Arial;
+    background: #74b9ff;
+  }
+  .container {
+    position: relative;
+    display: inline-block;
+    width: 320px;
+  }
+  input.search {
+    box-sizing: border-box;
+    width: 100%;
+    border: 0 none;
+    border-bottom: 4px solid black;
+    padding: 10px;
+    outline: none;
+  
+  }
+  input.search:focus {
+      background: rgba(0, 0, 0, 0.1);
+      border-color: #0984e3;
+  }
+  
+  
+  #o {
+    color: white;
+    position: fixed;
+    top: 12px;
+    right: 12px;
+  }
+  </style>
+
+  <p>Type something to watch debounce:</p>
+  <div class="container">
+    <input type="text" value="r-antonia-de-oliveira-jardim-maria-eneida-maua-sp" class="search" placeholder="Search">
+    <ul id="typed-values" class="typed-values"></ul>
+  </div>
+
+  <a id="o" href="https://github.com/otomer" title="Tomer Ovadia">otomer @ Github</a>
+
+
+  <script>
+    const load = () => {
+  const input = document.querySelector(".search");
+  const typedValues = document.getElementById("typed-values");
+
+  const debounce = (callback, milliseconds) => {
+    let timeout;
+
+    return (argument) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => callback(argument), milliseconds);
+    };
+  };
+  
+  const debounce2 = (fn, delay, timeout = 0) => (args) => {
+    clearTimeout(timeout);
+    // adds `as unknown as number` to ensure setTimeout returns a number
+    // like window.setTimeout
+    timeout = setTimeout(() => fn(args), delay);
+  }
+
+  function createSlug (text) {
+    return text.normalize('NFD')
+   .replace(/[\u0300-\u036f]/g, '')
+   .replace(/[^\w\-]+/g, '-')
+   .toLowerCase()
+ }
+   
+
+  const onKeyup = async (e) => {
+    const inputValue = e.target.value;
+    const data = await fetch("/"+createSlug(inputValue)).then(response => response.json())
+
+    typedValues.childNodes.forEach(childNode => typedValues.removeChild(childNode))
+    
+    data.forEach(item => {
+      const listItem = document.createElement("li");
+      listItem.innerHTML = item["lougadoro"] + ` <i>(${new Date().toLocaleTimeString()})</i>`;
+      typedValues.appendChild(listItem)
+    })
+  };
+
+  input.addEventListener("keyup", debounce2(onKeyup, 2000));
+};
+
+document.addEventListener("DOMContentLoaded", load);
+
+  </script>
+  
+</body>
+</html>
